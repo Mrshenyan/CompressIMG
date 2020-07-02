@@ -1,38 +1,53 @@
 import tkinter
 import tkinter.messagebox
 import os
+import tinify
+
+
+def CompressIMG(img, path):
+    print("压缩开始")
+    # source = tinify.from_file(path+"/"+img)
+    # source.to_file(path+"/"+img)
 
 
 def getError(msg):
     tkinter.messagebox.showerror(title="Error", message=msg)
 
 
-def CheckHasFileOrNot(path):
+def CheckHasFileOrNot(key, path, panel):
+    initTinifyKey(key)
     if os.path.exists(path):
         print("文件夹存在")
         Files = os.listdir(path)
         if Files:
             print("文件夹中有东西")
-            for k in range(len(Files)):
-                if os.path.split(Files[k])[1]==".png":
+            i = 0
+            for k in Files:
+                i += 1
+                if k.endswith(".png") | k.endswith(".jpg"):
                     print("压缩图片~")
-                else:print("没有图片")
+                    CompressIMG(k, path)
+                else:
+                    print("没有图片")
+            if i == len(Files):
+                tkinter.messagebox.showinfo(title="tinify压缩", message="搞定~")
     else:
         getError("指定路径不存在")
 
 
-def CheckkeyAndPath(key, path):
-    key_regStr = ""
-    path_regSt = ""
+def initTinifyKey(key):
+    tinify.key = key
+
+
+def CheckkeyAndPath(key, path, panel):
     if key == "":
         getError("密钥为空")
     else:
-        print(key)
-    if path == "":
-        getError("路径为空")
-    else:
-        print("校验路径下有没有相关文件")
-        CheckHasFileOrNot(path)
+        if path == "":
+            getError("路径为空")
+        else:
+            print("the key is :  ", key)
+            CheckHasFileOrNot(key, path, panel)
 
 
 def CreateCompent(parentPanel, K_entry, P_entry):
@@ -51,9 +66,14 @@ def CreateCompent(parentPanel, K_entry, P_entry):
     parentPanel.frame2.pack(side="top", anchor="nw")
 
     parentPanel.frame3 = tkinter.Frame(parentPanel)
-    parentPanel.goButton = tkinter.Button(parentPanel.frame3, text="GO!", fg="red", font={"宋体", 40}, width=10, command=lambda: CheckkeyAndPath(parentPanel.titleEntry.get(), parentPanel.titleEntry2.get()))
+    parentPanel.goButton = tkinter.Button(parentPanel.frame3, text="GO!", fg="red", font={"宋体", 40}, width=10, command=lambda: CheckkeyAndPath(parentPanel.titleEntry.get(), parentPanel.titleEntry2.get(),parentPanel))
     parentPanel.goButton.pack()
     parentPanel.frame3.pack(side="top", anchor="c")
+    # protext = tkinter.StringVar
+    # parentPanel.frame4 = tkinter.Frame(parentPanel)
+    # parentPanel.proLabel = tkinter.Label(parentPanel.frame4, textvariable=protext, fg="red", font={"宋体", 20}, anchor="c")
+    # parentPanel.proLabel.pack(side="left", anchor="w")
+    # parentPanel.frame4.pack(side="top", anchor="c")
 
     return parentPanel.titleEntry, parentPanel.titleEntry2
 
