@@ -23,7 +23,7 @@ def CheckHasFileOrNot(path):
 
 def CheckkeyAndPath(key, path):
     key_regStr = ""
-    path_regStr = ""
+    path_regSt = ""
     if key == "":
         getError("密钥为空")
     else:
